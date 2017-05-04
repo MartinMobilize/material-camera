@@ -19,6 +19,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -43,7 +44,7 @@ import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_M
 /**
  * @author Aidan Follestad (afollestad)
  */
-abstract class BaseCameraFragment extends Fragment implements CameraUriInterface, View.OnClickListener {
+abstract class BaseCameraFragment extends Fragment implements CameraUriInterface, View.OnTouchListener ,View.OnLongClickListener, View.OnClickListener {
 
     protected ImageButton mButtonVideo;
     protected ImageButton mButtonStillshot;
@@ -88,6 +89,27 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
     };
 
     @Override
+    public boolean onLongClick(View v) {
+        mIsRecording = startRecordingVideo();
+
+            return true;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+
+                if (mIsRecording) {
+                    stopRecordingVideo(false);
+                    mIsRecording = false;
+                }
+                    break;
+        }
+        return false;
+    }
+
+    @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.mcam_fragment_videocapture, container, false);
     }
@@ -123,7 +145,8 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
         mButtonFlash = (ImageButton) view.findViewById(R.id.flash);
         setupFlashMode();
 
-        mButtonVideo.setOnClickListener(this);
+        mButtonVideo.setOnLongClickListener(this);
+        mButtonVideo.setOnTouchListener(this);
         mButtonStillshot.setOnClickListener(this);
         mButtonFacing.setOnClickListener(this);
         mButtonFlash.setOnClickListener(this);
