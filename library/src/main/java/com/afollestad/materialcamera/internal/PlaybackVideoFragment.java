@@ -100,7 +100,7 @@ public class PlaybackVideoFragment extends Fragment implements CameraUriInterfac
             mPlayer.setLeftAction(EasyVideoPlayer.LEFT_ACTION_RETRY);
         mPlayer.setRightAction(EasyVideoPlayer.RIGHT_ACTION_SUBMIT);
 
-        mPlayer.setThemeColor(getArguments().getInt(CameraIntentKey.PRIMARY_COLOR));
+        mPlayer.setThemeColorRes(R.color.md_material_blue_600);
         mOutputUri = getArguments().getString("output_uri");
 
         if (mInterface.hasLengthLimit() && mInterface.shouldAutoSubmit() && mInterface.continueTimerInPlayback()) {

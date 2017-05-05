@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialcamera.MaterialCamera;
@@ -41,16 +42,17 @@ import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_M
 import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_AUTO;
 import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_OFF;
 
-/**
- * @author Aidan Follestad (afollestad)
- */
-abstract class BaseCameraFragment extends Fragment implements CameraUriInterface, View.OnTouchListener ,View.OnLongClickListener, View.OnClickListener {
+abstract class BaseCameraFragment extends Fragment implements CameraUriInterface, View.OnTouchListener, View.OnLongClickListener, View.OnClickListener {
 
     protected ImageButton mButtonVideo;
     protected ImageButton mButtonStillshot;
     protected ImageButton mButtonFacing;
+    protected ImageButton mGallery;
     protected ImageButton mButtonFlash;
+    protected ImageButton mRecordIconIndicator;
+    protected LinearLayout mRecordIndicator;
     protected TextView mRecordDuration;
+    protected TextView mExplanation;
     protected TextView mDelayStartCountdown;
 
     private boolean mIsRecording;
@@ -90,9 +92,10 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
 
     @Override
     public boolean onLongClick(View v) {
+        mRecordIndicator.setVisibility(View.VISIBLE);
+        mExplanation.setText(R.string.stop_record);
         mIsRecording = startRecordingVideo();
-
-            return true;
+        return true;
     }
 
     @Override
@@ -101,10 +104,14 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
             case MotionEvent.ACTION_UP:
 
                 if (mIsRecording) {
+                    mExplanation.setText(R.string.mcam_explanation);
+                    mRecordIndicator.setVisibility(View.INVISIBLE);
                     stopRecordingVideo(false);
                     mIsRecording = false;
                 }
-                    break;
+                break;
+            case MotionEvent.ACTION_BUTTON_PRESS:
+                takeStillshot();
         }
         return false;
     }
@@ -117,8 +124,9 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
     protected void setImageRes(ImageView iv, @DrawableRes int res) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && iv.getBackground() instanceof RippleDrawable) {
             RippleDrawable rd = (RippleDrawable) iv.getBackground();
-            rd.setColor(ColorStateList.valueOf(CameraUtil.adjustAlpha(mIconTextColor, 0.3f)));
+            rd.setColor(ColorStateList.valueOf(CameraUtil.adjustAlpha(mIconTextColor, 1f)));
         }
+
         Drawable d = AppCompatResources.getDrawable(iv.getContext(), res);
         d = DrawableCompat.wrap(d.mutate());
         DrawableCompat.setTint(d, mIconTextColor);
@@ -134,21 +142,21 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
         mButtonVideo = (ImageButton) view.findViewById(R.id.video);
         mButtonStillshot = (ImageButton) view.findViewById(R.id.stillshot);
         mRecordDuration = (TextView) view.findViewById(R.id.recordDuration);
+        mExplanation = (TextView) view.findViewById(R.id.recordExplanation);
         mButtonFacing = (ImageButton) view.findViewById(R.id.facing);
-        if (mInterface.shouldHideCameraFacing() || CameraUtil.isChromium()) {
-            mButtonFacing.setVisibility(View.GONE);
-        } else {
-            setImageRes(mButtonFacing, mInterface.getCurrentCameraPosition() == CAMERA_POSITION_BACK ?
-                    mInterface.iconFrontCamera() : mInterface.iconRearCamera());
-        }
+        mGallery = (ImageButton) view.findViewById(R.id.gallery);
+        mRecordIconIndicator = (ImageButton) view.findViewById(R.id.recordIconIndicator);
+        mRecordIndicator = (LinearLayout) view.findViewById(R.id.recordIndicator);
 
         mButtonFlash = (ImageButton) view.findViewById(R.id.flash);
         setupFlashMode();
 
         mButtonVideo.setOnLongClickListener(this);
         mButtonVideo.setOnTouchListener(this);
+        mButtonVideo.setOnClickListener(this);
         mButtonStillshot.setOnClickListener(this);
         mButtonFacing.setOnClickListener(this);
+        mGallery.setOnClickListener(this);
         mButtonFlash.setOnClickListener(this);
 
         int primaryColor = getArguments().getInt(CameraIntentKey.PRIMARY_COLOR);
@@ -158,13 +166,14 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
         } else {
             mIconTextColor = ContextCompat.getColor(getActivity(), R.color.mcam_color_dark);
         }
-        view.findViewById(R.id.controlsFrame).setBackgroundColor(primaryColor);
-        mRecordDuration.setTextColor(mIconTextColor);
+        mButtonFacing.setImageResource(R.drawable.flip_camera);
+        mGallery.setBackgroundResource(R.drawable.gallery);
+        mRecordIconIndicator.setBackgroundResource(R.drawable.red_circle);
 
         if (mMediaRecorder != null && mIsRecording) {
-            setImageRes(mButtonVideo, mInterface.iconStop());
+            mButtonVideo.setBackgroundResource(R.drawable.red_circle);
         } else {
-            setImageRes(mButtonVideo, mInterface.iconRecord());
+            mButtonVideo.setBackgroundResource(R.drawable.white_circle_empty);
             mInterface.setDidRecord(false);
         }
 
@@ -175,7 +184,6 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
             mButtonVideo.setVisibility(View.GONE);
             mRecordDuration.setVisibility(View.GONE);
             mButtonStillshot.setVisibility(View.VISIBLE);
-            setImageRes(mButtonStillshot, mInterface.iconStillshot());
             mButtonFlash.setVisibility(View.VISIBLE);
         }
 
@@ -407,39 +415,19 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
         final int id = view.getId();
         if (id == R.id.facing) {
             mInterface.toggleCameraPosition();
-            setImageRes(mButtonFacing, mInterface.getCurrentCameraPosition() == BaseCaptureActivity.CAMERA_POSITION_BACK ?
-                    mInterface.iconFrontCamera() : mInterface.iconRearCamera());
             closeCamera();
             openCamera();
             setupFlashMode();
         } else if (id == R.id.video) {
-            if (mIsRecording) {
-                stopRecordingVideo(false);
-                mIsRecording = false;
-            } else {
-                if (getArguments().getBoolean(CameraIntentKey.SHOW_PORTRAIT_WARNING, true) &&
-                        Degrees.isPortrait(getActivity())) {
-                    new MaterialDialog.Builder(getActivity())
-                            .title(R.string.mcam_portrait)
-                            .content(R.string.mcam_portrait_warning)
-                            .positiveText(R.string.mcam_yes)
-                            .negativeText(android.R.string.cancel)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog materialDialog, @NonNull DialogAction dialogAction) {
-                                    mIsRecording = startRecordingVideo();
-                                }
-                            })
-                            .show();
-                } else {
-                    mIsRecording = startRecordingVideo();
-                }
-            }
-        } else if (id == R.id.stillshot) {
             takeStillshot();
-        } else if (id == R.id.flash) {
-            invalidateFlash(true);
+        } else if(id == R.id.gallery){
+            Activity act = getActivity();
+            if (act != null) {
+                act.setResult(1001);
+                act.finish();
+            }
         }
+
     }
 
     private void invalidateFlash(boolean toggle) {
@@ -469,6 +457,5 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
                 res = mInterface.iconFlashOff();
         }
 
-        setImageRes(mButtonFlash, res);
     }
 }

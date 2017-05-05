@@ -4,4 +4,6 @@
     android:id="@+id/playbackView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:evp_restartDrawable="@drawable/delete"
+    app:evp_themeColor="@color/md_material_blue_600"
     app:evp_hideControlsOnPlay="false" />

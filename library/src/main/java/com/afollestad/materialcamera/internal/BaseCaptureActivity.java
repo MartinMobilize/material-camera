@@ -492,31 +492,31 @@ public abstract class BaseCaptureActivity extends AppCompatActivity implements B
     @DrawableRes
     @Override
     public int iconRestart() {
-        return getIntent().getIntExtra(CameraIntentKey.ICON_RESTART, R.drawable.evp_action_restart);
+        return getIntent().getIntExtra(CameraIntentKey.ICON_RESTART, R.drawable.delete);
     }
 
     @DrawableRes
     @Override
     public int iconRearCamera() {
-        return getIntent().getIntExtra(CameraIntentKey.ICON_REAR_CAMERA, R.drawable.mcam_camera_rear);
+        return getIntent().getIntExtra(CameraIntentKey.ICON_REAR_CAMERA, R.drawable.flip_camera);
     }
 
     @DrawableRes
     @Override
     public int iconFrontCamera() {
-        return getIntent().getIntExtra(CameraIntentKey.ICON_FRONT_CAMERA, R.drawable.mcam_camera_front);
+        return getIntent().getIntExtra(CameraIntentKey.ICON_FRONT_CAMERA, R.drawable.flip_camera);
     }
 
     @DrawableRes
     @Override
     public int iconStop() {
-        return getIntent().getIntExtra(CameraIntentKey.ICON_STOP, R.drawable.mcam_action_stop);
+        return getIntent().getIntExtra(CameraIntentKey.ICON_STOP, R.drawable.red_circle);
     }
 
     @DrawableRes
     @Override
     public int iconRecord() {
-        return getIntent().getIntExtra(CameraIntentKey.ICON_RECORD, R.drawable.mcam_action_capture);
+        return getIntent().getIntExtra(CameraIntentKey.ICON_RECORD, R.drawable.green_circle);
     }
 
     @StringRes
