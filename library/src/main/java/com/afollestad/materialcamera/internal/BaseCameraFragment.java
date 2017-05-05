@@ -2,7 +2,9 @@ package com.afollestad.materialcamera.internal;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
@@ -420,11 +422,24 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
             setupFlashMode();
         } else if (id == R.id.video) {
             takeStillshot();
-        } else if(id == R.id.gallery){
-            Activity act = getActivity();
+        } else if (id == R.id.gallery) {
+            final Activity act = getActivity();
             if (act != null) {
-                act.setResult(1001);
-                act.finish();
+
+                final CharSequence[] items = {"image", "video"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Choose the file type");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        // Do something with the selection
+                        String openType = items[item].toString();
+                        act.setResult(1001, new Intent().putExtra("file_type", openType));
+                        act.finish();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         }
 
