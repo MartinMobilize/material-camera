@@ -1,6 +1,7 @@
 package com.afollestad.materialcamera;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.afollestad.materialcamera.internal.BaseCaptureActivity;
@@ -13,4 +14,5 @@ public class CaptureActivity extends BaseCaptureActivity {
     public Fragment getFragment() {
         return CameraFragment.newInstance();
     }
+
 }

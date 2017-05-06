@@ -38,11 +38,12 @@ android {
 repositories {
     jcenter()
     maven { url "https://dl.bintray.com/drummer-aidan/maven" }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
-    compile "com.afollestad:easyvideoplayer:$VIDEO_PLAYER_VERSION"
+    compile 'com.github.MartinMobilize:easy-video-player:0.4.2'
     compile "com.afollestad.material-dialogs:core:$MD_VERSION"
 }
 

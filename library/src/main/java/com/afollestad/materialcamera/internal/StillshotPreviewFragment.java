@@ -44,9 +44,6 @@ public class StillshotPreviewFragment extends BaseGalleryFragment {
         super.onViewCreated(view, savedInstanceState);
         mImageView = (ImageView) view.findViewById(R.id.stillshot_imageview);
 
-        mConfirm.setText(mInterface.labelConfirm());
-        mRetry.setText(mInterface.labelRetry());
-
         mRetry.setOnClickListener(this);
         mConfirm.setOnClickListener(this);
 

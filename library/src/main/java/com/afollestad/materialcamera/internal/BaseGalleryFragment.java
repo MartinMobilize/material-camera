@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.afollestad.materialcamera.R;
 import com.afollestad.materialcamera.util.CameraUtil;
@@ -17,9 +18,8 @@ public abstract class BaseGalleryFragment extends Fragment implements CameraUriI
     BaseCaptureInterface mInterface;
     int mPrimaryColor;
     String mOutputUri;
-    View mControlsFrame;
-    Button mRetry;
-    Button mConfirm;
+    ImageButton mRetry;
+    ImageButton mConfirm;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -39,22 +39,16 @@ public abstract class BaseGalleryFragment extends Fragment implements CameraUriI
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mOutputUri = getArguments().getString("output_uri");
-        mControlsFrame = view.findViewById(R.id.controlsFrame);
-        mRetry = (Button) view.findViewById(R.id.retry);
-        mConfirm = (Button) view.findViewById(R.id.confirm);
+        mRetry = (ImageButton) view.findViewById(R.id.retry);
+        mConfirm = (ImageButton) view.findViewById(R.id.confirm);
 
         mPrimaryColor = getArguments().getInt(CameraIntentKey.PRIMARY_COLOR);
         if (CameraUtil.isColorDark(mPrimaryColor)) {
             mPrimaryColor = CameraUtil.darkenColor(mPrimaryColor);
             final int textColor = ContextCompat.getColor(view.getContext(), R.color.mcam_color_light);
-            mRetry.setTextColor(textColor);
-            mConfirm.setTextColor(textColor);
         } else {
             final int textColor = ContextCompat.getColor(view.getContext(), R.color.mcam_color_dark);
-            mRetry.setTextColor(textColor);
-            mConfirm.setTextColor(textColor);
         }
-        mControlsFrame.setBackgroundColor(mPrimaryColor);
 
         mRetry.setVisibility(getArguments().getBoolean(CameraIntentKey.ALLOW_RETRY, true) ? View.VISIBLE : View.GONE);
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,53 +12,58 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:id="@+id/controlsFrame"
+    <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/mcam_content_inset_less"
-        android:paddingLeft="@dimen/mcam_content_inset"
-        android:paddingRight="@dimen/mcam_content_inset"
-        android:paddingTop="@dimen/mcam_content_inset_less">
+        android:background="#31000000"
+        android:clickable="true"
+        android:paddingBottom="@dimen/evp_content_inset"
+        android:paddingTop="@dimen/evp_content_inset">
 
-        <FrameLayout
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/confirm"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="@dimen/evp_content_inset_iconbuttons"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:gravity="center"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/submit"
+            tools:ignore="ContentDescription,UnusedAttribute" />
+
+        <TextView
+            android:id="@+id/recordExplanation"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|bottom"
-            android:background="@color/md_material_blue_600"
-            tools:ignore="UselessParent">
+            android:layout_below="@id/confirm"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="   "
+            android:textColor="#ffffff"
+            android:textSize="14dp" />
 
-            <Button
-                android:id="@+id/retry"
-                style="?borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|start"
-                android:background="@drawable/mcam_square_selector"
-                android:fontFamily="sans-serif-medium"
-                android:padding="@dimen/mcam_content_inset_less"
-                android:scaleType="fitXY"
-                android:text="@string/mcam_retry"
-                android:textColor="#fff"
-                android:textSize="@dimen/mcam_regular_title_fontsize" />
+        <ImageButton
+            android:id="@+id/retry"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:gravity="center"
+            android:scaleType="fitXY"
+            android:layout_marginEnd="@dimen/evp_content_inset"
+            android:layout_marginRight="@dimen/evp_content_inset"
+            app:srcCompat="@drawable/delete"
+            tools:ignore="ContentDescription,UnusedAttribute"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-            <Button
-                android:id="@+id/confirm"
-                style="?borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                android:background="@drawable/mcam_square_selector"
-                android:padding="@dimen/mcam_content_inset_less"
-                android:scaleType="fitXY"
-                android:text="@string/mcam_use_stillshot"
-                android:textColor="#fff"
-                android:textSize="@dimen/mcam_regular_title_fontsize" />
+    </RelativeLayout>
 
-        </FrameLayout>
-
-    </LinearLayout>
-
-</FrameLayout>
+</RelativeLayout>

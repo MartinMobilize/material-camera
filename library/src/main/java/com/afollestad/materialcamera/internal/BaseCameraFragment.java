@@ -124,14 +124,8 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
     }
 
     protected void setImageRes(ImageView iv, @DrawableRes int res) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && iv.getBackground() instanceof RippleDrawable) {
-            RippleDrawable rd = (RippleDrawable) iv.getBackground();
-            rd.setColor(ColorStateList.valueOf(CameraUtil.adjustAlpha(mIconTextColor, 1f)));
-        }
-
         Drawable d = AppCompatResources.getDrawable(iv.getContext(), res);
         d = DrawableCompat.wrap(d.mutate());
-        DrawableCompat.setTint(d, mIconTextColor);
         iv.setImageDrawable(d);
     }
 
@@ -168,7 +162,10 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
         } else {
             mIconTextColor = ContextCompat.getColor(getActivity(), R.color.mcam_color_dark);
         }
-        mButtonFacing.setImageResource(R.drawable.flip_camera);
+        Drawable d = AppCompatResources.getDrawable(mButtonFacing.getContext(), R.drawable.flip_camera);
+        d = DrawableCompat.wrap(d.mutate());
+
+        mButtonFacing.setImageDrawable(d);
         mGallery.setBackgroundResource(R.drawable.gallery);
         mRecordIconIndicator.setBackgroundResource(R.drawable.red_circle);
 
@@ -213,6 +210,7 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
             return;
         }
         mDidAutoRecord = true;
+        mGallery.setVisibility(View.GONE);
         mButtonFacing.setVisibility(View.GONE);
 
         if (mInterface.autoRecordDelay() == 0) {
@@ -426,7 +424,9 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
             final Activity act = getActivity();
             if (act != null) {
 
-                final CharSequence[] items = {"image", "video"};
+                final CharSequence[] items = {
+                        "image", "video"
+                };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Choose the file type");
@@ -440,6 +440,7 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
                 });
                 AlertDialog alert = builder.create();
                 alert.show();
+
             }
         }
 
