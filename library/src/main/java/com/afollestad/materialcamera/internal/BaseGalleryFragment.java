@@ -2,9 +2,12 @@ package com.afollestad.materialcamera.internal;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -12,6 +15,9 @@ import android.widget.ImageButton;
 import com.afollestad.materialcamera.R;
 import com.afollestad.materialcamera.util.CameraUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import static android.app.Activity.RESULT_OK;
 
 public abstract class BaseGalleryFragment extends Fragment implements CameraUriInterface, View.OnClickListener {
 

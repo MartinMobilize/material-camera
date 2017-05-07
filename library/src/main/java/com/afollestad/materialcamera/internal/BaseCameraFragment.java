@@ -419,6 +419,7 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
             openCamera();
             setupFlashMode();
         } else if (id == R.id.video) {
+            mButtonVideo.setBackgroundResource(R.drawable.white_circle);
             takeStillshot();
         } else if (id == R.id.gallery) {
             final Activity act = getActivity();

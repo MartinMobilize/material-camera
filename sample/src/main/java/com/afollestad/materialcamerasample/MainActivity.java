@@ -3,6 +3,7 @@ package com.afollestad.materialcamerasample;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialcamera.MaterialCamera;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -101,7 +103,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 final File file = new File(data.getData().getPath());
                 Toast.makeText(this, String.format("Saved to: %s, size: %s",
                         file.getAbsolutePath(), fileSize(file)), Toast.LENGTH_LONG).show();
-            } else if (data != null) {
+            } else if (resultCode == 1234) {
+                String mStringUri = data.getStringExtra("stringUri");
+                CropImage.activity(Uri.parse(mStringUri))
+                        .setAspectRatio(9,16)
+                        .start(this);
+            }else if (data != null) {
                 Exception e = (Exception) data.getSerializableExtra(MaterialCamera.ERROR_EXTRA);
                 if (e != null) {
                     e.printStackTrace();
@@ -109,6 +116,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                Toast.makeText(this, "Saved: " + resultUri.toString(), Toast.LENGTH_LONG).show();
+            }
+            else{
+                new MaterialCamera(this)
+                        .showPortraitWarning(false)
+                        .defaultToFrontFacing(true)
+                        .allowRetry(true)
+                        .autoSubmit(false)
+                        .start(CAMERA_RQ);
+            }
+        }
+
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.afollestad.materialcamera.internal;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,9 @@ import android.widget.ImageView;
 
 import com.afollestad.materialcamera.R;
 import com.afollestad.materialcamera.util.ImageUtil;
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import static android.app.Activity.RESULT_OK;
 
 public class StillshotPreviewFragment extends BaseGalleryFragment {
 
@@ -93,7 +98,11 @@ public class StillshotPreviewFragment extends BaseGalleryFragment {
     public void onClick(View v) {
         if (v.getId() == R.id.retry)
             mInterface.onRetry(mOutputUri);
-        else if (v.getId() == R.id.confirm)
-            mInterface.useMedia(mOutputUri);
+        else if (v.getId() == R.id.confirm) {
+            Intent intent = new Intent();
+            intent.putExtra("stringUri", mOutputUri);
+            getActivity().setResult(1234, intent);
+            getActivity().finish();
+        }
     }
 }

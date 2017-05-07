@@ -20,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,6 +30,7 @@ import com.afollestad.materialcamera.R;
 import com.afollestad.materialcamera.TimeLimitReachedException;
 import com.afollestad.materialcamera.util.CameraUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.lang.annotation.Retention;
@@ -50,6 +52,8 @@ public abstract class BaseCaptureActivity extends AppCompatActivity implements B
     private Object mBackCameraId;
     private boolean mDidRecord = false;
     private List<Integer> mFlashModes;
+
+    private String mOutputUri;
 
     public static final int PERMISSION_RC = 69;
 
@@ -350,6 +354,9 @@ public abstract class BaseCaptureActivity extends AppCompatActivity implements B
         if (shouldAutoSubmit()) {
             useMedia(outputUri);
         } else {
+
+            mOutputUri = outputUri;
+
             Fragment frag = StillshotPreviewFragment.newInstance(outputUri, allowRetry(),
                     getIntent().getIntExtra(CameraIntentKey.PRIMARY_COLOR, 0));
             getFragmentManager().beginTransaction()
@@ -375,9 +382,21 @@ public abstract class BaseCaptureActivity extends AppCompatActivity implements B
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        Log.d("martin", "yes");
         if (requestCode == PERMISSION_RC) showInitialRecorder();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(intent);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                useMedia(resultUri.toString());
+            }
+            else{
+                onRetry(mOutputUri);
+            }
+        }
+
     }
 
     @Override
