@@ -351,9 +351,9 @@ public abstract class BaseCaptureActivity extends AppCompatActivity implements B
 
     @Override
     public void onShowStillshot(String outputUri) {
-        if (shouldAutoSubmit()) {
+
             useMedia(outputUri);
-        } else {
+        /* else {
 
             mOutputUri = outputUri;
 
@@ -362,7 +362,7 @@ public abstract class BaseCaptureActivity extends AppCompatActivity implements B
             getFragmentManager().beginTransaction()
                     .replace(R.id.container, frag)
                     .commit();
-        }
+        }*/
     }
 
     @Override
