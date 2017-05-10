@@ -318,7 +318,7 @@ public class MaterialCamera {
 
     public Intent getIntent() {
         final Class<?> cls = !mForceCamera1 && CameraUtil.hasCamera2(mContext, mStillShot) ?
-                CaptureActivity2.class : CaptureActivity.class;
+                CaptureActivity.class : CaptureActivity.class;
         Intent intent = new Intent(mContext, cls)
                 .putExtra(CameraIntentKey.LENGTH_LIMIT, mLengthLimit)
                 .putExtra(CameraIntentKey.ALLOW_RETRY, mAllowRetry)
