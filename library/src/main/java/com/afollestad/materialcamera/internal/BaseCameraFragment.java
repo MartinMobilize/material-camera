@@ -136,7 +136,7 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mIsVideoAllowed = new MaterialCamera().isVideoAllowed();
+        mIsVideoAllowed =  MaterialCamera.mAllowVideo;
 
         mDelayStartCountdown = (TextView) view.findViewById(R.id.delayStartCountdown);
         mButtonVideo = (ImageButton) view.findViewById(R.id.video);

@@ -87,7 +87,7 @@ public class MaterialCamera {
 
     private int mLabelRetry;
     private int mLabelConfirm;
-    public boolean mAllowVideo;
+    public static boolean mAllowVideo;
 
     public MaterialCamera(@NonNull Activity context) {
         mContext = context;
