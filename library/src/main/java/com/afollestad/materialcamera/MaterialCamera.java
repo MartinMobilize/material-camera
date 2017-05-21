@@ -87,12 +87,27 @@ public class MaterialCamera {
 
     private int mLabelRetry;
     private int mLabelConfirm;
+    public boolean mAllowVideo;
 
     public MaterialCamera(@NonNull Activity context) {
         mContext = context;
         mActivityContext = context;
         mPrimaryColor = DialogUtils.resolveColor(context, R.attr.colorPrimary);
     }
+    public MaterialCamera(@NonNull Activity context, boolean allowVideo) {
+        mContext = context;
+        mActivityContext = context;
+        mAllowVideo = allowVideo;
+        mPrimaryColor = DialogUtils.resolveColor(context, R.attr.colorPrimary);
+    }
+
+    public MaterialCamera (){
+
+    }
+    public  boolean isVideoAllowed(){
+        return mAllowVideo;
+    }
+
 
     public MaterialCamera(@NonNull android.app.Fragment context) {
         mIsFragment = true;

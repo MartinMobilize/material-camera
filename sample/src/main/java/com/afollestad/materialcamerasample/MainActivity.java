@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialcamera.MaterialCamera;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.DecimalFormat;
 
 /**
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             saveDir.mkdirs();
         }
 
-        MaterialCamera materialCamera = new MaterialCamera(this)
+        MaterialCamera materialCamera = new MaterialCamera(this, false)
                 .saveDir(saveDir)
                 .showPortraitWarning(true)
                 .allowRetry(true)
@@ -105,9 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         file.getAbsolutePath(), fileSize(file)), Toast.LENGTH_LONG).show();
             } else if (resultCode == 1234) {
                 String mStringUri = data.getStringExtra("stringUri");
-                CropImage.activity(Uri.parse(mStringUri))
-                        .setAspectRatio(9,16)
-                        .start(this);
             }else if (data != null) {
                 Exception e = (Exception) data.getSerializableExtra(MaterialCamera.ERROR_EXTRA);
                 if (e != null) {
@@ -116,22 +113,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }
-        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-                Uri resultUri = result.getUri();
-                Toast.makeText(this, "Saved: " + resultUri.toString(), Toast.LENGTH_LONG).show();
-            }
-            else{
-                new MaterialCamera(this)
-                        .showPortraitWarning(false)
-                        .defaultToFrontFacing(true)
-                        .allowRetry(true)
-                        .autoSubmit(false)
-                        .start(CAMERA_RQ);
-            }
-        }
-
     }
 
     @Override

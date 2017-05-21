@@ -45,7 +45,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
     compile 'com.github.MartinMobilize:easy-video-player:0.4.3'
     compile "com.afollestad.material-dialogs:core:$MD_VERSION"
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.4.+'
+    compile "com.github.MartinMobilize:android-image-cropper:2.4.3"
 }
 
 apply from: 'https://raw.githubusercontent.com/afollestad/aidanfollestad.com/master/android-lib-release.gradle'

@@ -30,7 +30,6 @@ import com.afollestad.materialcamera.R;
 import com.afollestad.materialcamera.TimeLimitReachedException;
 import com.afollestad.materialcamera.util.CameraUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.lang.annotation.Retention;
@@ -386,17 +385,6 @@ public abstract class BaseCaptureActivity extends AppCompatActivity implements B
         super.onActivityResult(requestCode, resultCode, intent);
         Log.d("martin", "yes");
         if (requestCode == PERMISSION_RC) showInitialRecorder();
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(intent);
-            if (resultCode == RESULT_OK) {
-                Uri resultUri = result.getUri();
-                useMedia(resultUri.toString());
-            }
-            else{
-                onRetry(mOutputUri);
-            }
-        }
-
     }
 
     @Override

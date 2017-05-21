@@ -64,6 +64,8 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
     protected MediaRecorder mMediaRecorder;
     private int mIconTextColor;
 
+    private boolean mIsVideoAllowed;
+
     protected static void LOG(Object context, String message) {
         Log.d(context instanceof Class<?> ? ((Class<?>) context).getSimpleName() :
                 context.getClass().getSimpleName(), message);
@@ -134,6 +136,8 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mIsVideoAllowed = new MaterialCamera().isVideoAllowed();
+
         mDelayStartCountdown = (TextView) view.findViewById(R.id.delayStartCountdown);
         mButtonVideo = (ImageButton) view.findViewById(R.id.video);
         mButtonStillshot = (ImageButton) view.findViewById(R.id.stillshot);
@@ -147,7 +151,12 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
         mButtonFlash = (ImageButton) view.findViewById(R.id.flash);
         setupFlashMode();
 
-        mButtonVideo.setOnLongClickListener(this);
+        if (mIsVideoAllowed){
+            mButtonVideo.setOnLongClickListener(this);
+        }
+        else{
+            mExplanation.setVisibility(View.INVISIBLE);
+        }
         mButtonVideo.setOnTouchListener(this);
         mButtonVideo.setOnClickListener(this);
         mButtonStillshot.setOnClickListener(this);
@@ -429,18 +438,24 @@ abstract class BaseCameraFragment extends Fragment implements CameraUriInterface
                         "image", "video"
                 };
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Choose the file type");
-                builder.setItems(items, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        // Do something with the selection
-                        String openType = items[item].toString();
-                        act.setResult(1001, new Intent().putExtra("file_type", openType));
-                        act.finish();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
+                if (mIsVideoAllowed) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Choose the file type");
+                    builder.setItems(items, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int item) {
+                            // Do something with the selection
+                            String openType = items[item].toString();
+                            act.setResult(1001, new Intent().putExtra("file_type", openType));
+                            act.finish();
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                else{
+                    act.setResult(1001, new Intent().putExtra("file_type", "image"));
+                    act.finish();
+                }
 
             }
         }

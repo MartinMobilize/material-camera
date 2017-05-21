@@ -14,7 +14,6 @@ import android.widget.ImageView;
 
 import com.afollestad.materialcamera.R;
 import com.afollestad.materialcamera.util.ImageUtil;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import static android.app.Activity.RESULT_OK;
 
